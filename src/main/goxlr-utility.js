@@ -63,6 +63,10 @@ module.exports = {
                 const id = message["id"];
                 const data = message["data"];
 
+                // apply patch to status
+                if (isPatchMessage) this.status = apply_patch(this.status, message["data"]["Patch"]);
+                if (isStatusMessage) this.status = message["data"]["Status"];
+
                 // notify listeners
                 this.#onMessageListeners.forEach((listener) => {
                     try {
@@ -71,11 +75,6 @@ module.exports = {
                         this.#log(`Error in listener: ${error.message}`);
                     }
                 });
-
-                // apply patch to status
-                if (isPatchMessage) this.status = apply_patch(this.status, message["data"]["Patch"]);
-
-                if (isStatusMessage) this.status = message["data"]["Status"];
             } catch (error) {
                 this.#log(`Error handling message: ${error.message}`);
             }
