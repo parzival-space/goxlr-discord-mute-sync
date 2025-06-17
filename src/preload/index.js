@@ -5,6 +5,9 @@
  * We do not write any actual code here, but instead write a placeholder that will be replaced by the build script.
  */
 
+const MAGENTA = '\x1b[35;49m';
+const RESET = '\x1b[39;49m';
+
 // load injected code once discord is ready
 // we can regularly check if the client is ready, by checking if the window title does not contain "update"
 const { BrowserWindow, dialog } = require('electron');
@@ -15,12 +18,13 @@ const injectInterval = setInterval(() => {
 
     // discord is ready
     clearInterval(injectInterval);
-    console.log(JSON.stringify(window));
     window.webContents.executeJavaScript(`@injectCode`)
+        // print some fancy message in rainbow colors
+        .then(result => console.log(
+            `${MAGENTA}Code Injection Successful!${RESET}`))
         .catch(err => dialog.showErrorBox(
-            `Code Execution Error`,
-            `An error occurred while running injected code:\n\n${err.message}`
-        ));
+            `Code Injection Error`,
+            `An error occurred while injecting code into Discord:\n\n${err.message}`));
 }, 500)
 
 // load discord's core.asar file
