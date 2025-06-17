@@ -24,5 +24,8 @@
   "devDependencies": {
     "electron": "^36.4.0",
     "esbuild": "^0.25.5"
+  },
+  "dependencies": {
+    "jsonpatch": "^3.1.0"
   }
 }
