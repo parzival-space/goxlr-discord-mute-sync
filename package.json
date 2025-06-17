@@ -1,0 +1,28 @@
+{
+  "name": "goxlr-discord-mute-sync",
+  "version": "1.0.0",
+  "description": "Discord client script injection to sync the users mute/deafen state with the mute state of the GoXLR",
+  "main": "index.js",
+  "scripts": {
+    "build": "node ./src/build/index.js"
+  },
+  "config": {
+    "sourceDir": "./src",
+    "buildDir": "./dist",
+    "licenseFile": "./LICENSE"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parzival-space/goxlr-discord-mute-sync.git"
+  },
+  "author": "Malte Linke (parzival-space)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/parzival-space/goxlr-discord-mute-sync/issues"
+  },
+  "homepage": "https://github.com/parzival-space/goxlr-discord-mute-sync#readme",
+  "devDependencies": {
+    "electron": "^36.4.0",
+    "esbuild": "^0.25.5"
+  }
+}
