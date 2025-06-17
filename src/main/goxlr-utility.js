@@ -64,10 +64,16 @@ module.exports = {
                 const data = message["data"];
 
                 // notify listeners
-                this.#onMessageListeners.forEach((listener) => listener(id, data, isPatchMessage));
+                this.#onMessageListeners.forEach((listener) => {
+                    try {
+                        listener(id, data, isPatchMessage);
+                    } catch (error) {
+                        this.#log(`Error in listener: ${error.message}`);
+                    }
+                });
 
                 // apply patch to status
-                if (isPatchMessage) apply_patch(this.status, message["data"]["Patch"]);
+                if (isPatchMessage) this.status = apply_patch(this.status, message["data"]["Patch"]);
 
                 if (isStatusMessage) this.status = message["data"]["Status"];
             } catch (error) {
