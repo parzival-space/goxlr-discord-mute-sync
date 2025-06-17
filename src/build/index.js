@@ -11,6 +11,7 @@ const SOURCE_ROOT = join(PROJECT_ROOT, require(PACKAGE_JSON_PATH).config.sourceD
 const BUILD_ROOT = join(PROJECT_ROOT, require(PACKAGE_JSON_PATH).config.buildDir);
 const LICENSE_FILE = join(PROJECT_ROOT, require(PACKAGE_JSON_PATH).config.licenseFile);
 
+const STANDALONE_DIR = join(BUILD_ROOT, 'standalone');
 
 // clean build directory
 cleanBuildDirectory(BUILD_ROOT);
@@ -19,20 +20,26 @@ cleanBuildDirectory(BUILD_ROOT);
 const mainProjectDir = 'main';
 buildProject({
     entryPoints: [join(SOURCE_ROOT, mainProjectDir, 'index.js')],
-    outdir: join(BUILD_ROOT, mainProjectDir),
+    outfile: join(STANDALONE_DIR, 'inject.js'),
     sourceRoot: join(SOURCE_ROOT, mainProjectDir),
     bundle: true,
     packages: 'bundle',
     treeShaking: true,
     sourcemap: 'inline',
-    minify: true
+    minify: false,
+    banner: {
+        "js": readFileSync(LICENSE_FILE, 'utf-8')
+            .split('\n')
+            .map(line => `// ${line}`)
+            .join('\n') + '\n'
+    },
 });
 
 // build preload script
 const preloadProjectDir = 'preload';
 buildProject({
     entryPoints: [join(SOURCE_ROOT, preloadProjectDir, 'index.js')],
-    outdir: join(BUILD_ROOT, preloadProjectDir),
+    outfile: join(STANDALONE_DIR, 'index.js'),
     sourceRoot: join(SOURCE_ROOT, preloadProjectDir),
     bundle: false,
     packages: 'external',
@@ -46,11 +53,3 @@ buildProject({
             .join('\n') + '\n'
     },
 });
-
-// inject code into preload script
-mergeInjectFiles(
-    join(BUILD_ROOT, preloadProjectDir, 'index.js'),
-    join(BUILD_ROOT, mainProjectDir, 'index.js'),
-    join(BUILD_ROOT, 'index.js'),
-    '@injectCode'
-);

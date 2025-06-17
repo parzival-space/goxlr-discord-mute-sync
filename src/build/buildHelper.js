@@ -14,7 +14,7 @@ module.exports = {
             `Building Project: ${dirname(options.sourceRoot)} \n` +
             `> ${options.sourceRoot}\n` +
             options.entryPoints
-                .map(entryPoint => `  > ${basename(entryPoint)} -> ${join(options.outdir, entryPoint)}`)
+                .map(entryPoint => `  > ${basename(entryPoint)} -> ${options.outdir ? join(options.outdir, entryPoint) : options.outfile}`)
                 .join('\n')
         );
 
@@ -63,7 +63,10 @@ module.exports = {
         const injectContent = readFileSync(injectFile, 'utf-8');
 
         // replace the placeholder with the inject content
-        const mergedContent = sourceContent.replace(injectPlaceholder, injectContent);
+        const mergedContent = sourceContent.replace(
+            injectPlaceholder,
+            injectContent.replaceAll("\\", "\\\\")
+                .replaceAll("\"", "\\\""));
 
         // write the merged content to the output file
         writeFileSync(outputPath, mergedContent, 'utf-8');

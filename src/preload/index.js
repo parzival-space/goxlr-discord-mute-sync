@@ -5,23 +5,36 @@
  * We do not write any actual code here, but instead write a placeholder that will be replaced by the build script.
  */
 
-const MAGENTA = '\x1b[35;49m';
-const RESET = '\x1b[39;49m';
+const { BrowserWindow, dialog } = require('electron');
+const { readFileSync, existsSync } = require('fs');
+const { join } = require('path');
+
+const INJECT_FILE = join(__dirname, 'inject.js');
 
 // load injected code once discord is ready
 // we can regularly check if the client is ready, by checking if the window title does not contain "update"
-const { BrowserWindow, dialog } = require('electron');
 const injectInterval = setInterval(() => {
     const window = BrowserWindow.getAllWindows()
         .find(win => !win.title.toLowerCase().includes('update'));
     if (window === undefined) return;
-
-    // discord is ready
     clearInterval(injectInterval);
-    window.webContents.executeJavaScript(`@injectCode`)
+
+    const scriptContent = existsSync(INJECT_FILE)
+        ? readFileSync(INJECT_FILE, 'utf-8')
+        : `console.error('Inject file not found: ${INJECT_FILE}');`;
+
+    window.webContents.executeJavaScript(`
+        (() => {
+            try {
+                ${scriptContent}
+            } catch (err) {
+                console.error(err);
+            }
+        })();
+    `)
         // print some fancy message in rainbow colors
         .then(result => console.log(
-            `${MAGENTA}Code Injection Successful!${RESET}`))
+            `\x1b[35;49mCode Injection Successful!`))
         .catch(err => dialog.showErrorBox(
             `Code Injection Error`,
             `An error occurred while injecting code into Discord:\n\n${err.message}`));
