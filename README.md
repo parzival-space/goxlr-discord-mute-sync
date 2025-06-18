@@ -17,7 +17,7 @@ To install it simply copy the content of `dist/standalone` into `~/.config/disco
 You may need to adjust the version number in the path depending on your Discord version. Discord will automatically load the code when it starts.
 
 You can verify that the code is loaded by checking the Developer Tools console (Ctrl+Shift+I) or running Discord in the terminal.
-If you a purple message saying `Code Injection Successful!` then the code has been loaded successfully.
+If you see a purple message saying `Code Injection Successful!` then the code has been loaded successfully.
 
 ## References / Sources
 Thanks to the following projects I was able to figure out how the code injection works:
