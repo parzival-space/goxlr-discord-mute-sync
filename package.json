@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/parzival-space/goxlr-discord-mute-sync#readme",
   "devDependencies": {
-    "electron": "^36.8.1",
+    "electron": "^39.8.5",
     "esbuild": "^0.25.5"
   },
   "dependencies": {
